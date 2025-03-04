@@ -1,8 +1,17 @@
 package com.joni.edumart.data.api
 
 
+import com.joni.edumart.common.ApiResponse
 import com.joni.edumart.data.api.dto.CourseDto
+import com.joni.edumart.data.api.dto.coursedetail.Data
+import com.joni.edumart.data.api.request.ChangePasswordRequest
+import com.joni.edumart.data.api.request.LoginRequest
+import com.joni.edumart.data.api.request.LoginResponse
+import com.joni.edumart.data.api.request.SendOtpRequest
+import com.joni.edumart.data.api.request.SignupRequest
+import com.joni.edumart.domain.models.auth.User
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -12,17 +21,17 @@ interface ApiService {
     /*
     * Authentication Endpoints
     * */
-    @GET("/auth/login")
-    suspend fun login(email: String, password: String): Response<Unit>
+    @POST("auth/login")
+    suspend fun login(@Body request : LoginRequest): Response<LoginResponse>
 
     @POST("/auth/signup")
-    suspend fun signup(email: String, password: String): Response<Unit>
+    suspend fun signup(@Body request : SignupRequest): Response<ApiResponse<User>>
 
     @POST("/auth/sendotp")
-    suspend fun sendOtp(email: String): Response<Unit>
+    suspend fun sendOtp(@Body request : SendOtpRequest): Response<ApiResponse<Any>>
 
     @POST("/auth/reset-password")
-    suspend fun resetPassword(email: String, otp: String, newPassword: String): Response<Unit>
+    suspend fun resetPassword(@Body request : ChangePasswordRequest): Response<ApiResponse<Any>>
 
     @POST("/auth/reset-password-token")
     suspend fun resetPasswordToken(email: String): Response<Unit>
@@ -59,8 +68,8 @@ interface ApiService {
     @GET("/course/getAllCourses")
     suspend fun getCourses(): Response<List<CourseDto>>
 
-    @GET("/course/getCourseDetails")
-    suspend fun getCourseDetails(courseId: String): Response<Unit>
+    @POST("/course/getCourseDetails")
+    suspend fun getCourseDetails(@Body courseId: String): Response<Data>
 
     @PUT("/course/editCourse")
     suspend fun editCourse(courseId: String): Response<Unit>

@@ -4,6 +4,7 @@ import android.content.Context
 import com.joni.edumart.data.api.ApiService
 import com.joni.edumart.data.api.dto.CourseDto
 import com.joni.edumart.data.api.dto.Instructor
+import com.joni.edumart.data.api.dto.coursedetail.Data
 import com.joni.edumart.data.isNetworkAvailable
 import com.joni.edumart.data.offline.CourseDao
 import com.joni.edumart.domain.models.Course
@@ -33,6 +34,15 @@ class CourseRepoImpl @Inject constructor(
         } else {
             // Fetch from the local database if offline
             courseDao.getAllCourse().toDomain()
+        }
+    }
+
+    override suspend fun getCourseDetails(courseId: String): Data {
+        val response = apiService.getCourseDetails(courseId)
+        return if (response.isSuccessful) {
+            response.body()!!
+        } else  {
+            TODO()
         }
     }
 

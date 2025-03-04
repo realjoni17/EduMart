@@ -15,7 +15,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    val BaseUrl: String = "https://edtech-server-a3tn.onrender.com/api/v1"
+    val BaseUrl: String = "https://edtech-server-a3tn.onrender.com/api/v1/"
 
     @Singleton
     @Provides
