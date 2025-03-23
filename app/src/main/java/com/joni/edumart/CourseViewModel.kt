@@ -4,7 +4,7 @@ import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.joni.edumart.data.api.dto.coursedetail.Data
+import com.joni.edumart.data.api.dto.coursedetail.CourseDetailData
 import com.joni.edumart.domain.models.Course
 import com.joni.edumart.domain.repository.CourseRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -22,14 +22,12 @@ class CourseViewModel @Inject constructor(private val courseRepo: CourseRepo) : 
     private val _courseDetail = MutableStateFlow<CourseDetailState>(CourseDetailState.Idle)
     val courseDetail: StateFlow<CourseDetailState> = _courseDetail
 
-
     private val _errorMesssage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMesssage.asStateFlow()
 
 
     init {
         loadCourses()
-        loadCourseDetails("1")
     }
 
     private fun loadCourses() {
@@ -45,26 +43,26 @@ class CourseViewModel @Inject constructor(private val courseRepo: CourseRepo) : 
         }
     }
 
-    private fun loadCourseDetails(courseId: String) {
+    fun loadCourseDetails(courseId: String) {
         viewModelScope.launch {
-            try {
-                val courseDetailList = courseRepo.getCourseDetails(courseId)
-                _courseDetail.value = courseDetailList.let {
-                    CourseDetailState.Success(it)
-                }
-                Log.d(TAG, "load: $courseDetailList")
-            } catch (e: Exception) {
-                _errorMesssage.value = CourseDetailState.Error(e.message).toString()
+            _courseDetail.value = CourseDetailState.Loading  // Set loading state before making request
 
-                Log.d(TAG, "load:${e.message}")
+            try {
+                val courseDetail = courseRepo.getCourseDetails(courseId)
+                _courseDetail.value = CourseDetailState.Success(courseDetail)
+                Log.d(TAG, "Course loaded: $courseDetail")
+            } catch (e: Exception) {
+                _courseDetail.value = CourseDetailState.Error(e.message)
+                Log.e(TAG, "Error loading course: ${e.message}", e)
             }
         }
     }
+
 }
 
 sealed class CourseDetailState {
     object Idle : CourseDetailState()
     object Loading :  CourseDetailState()
-    data class Success(val detail: Data) :  CourseDetailState()
+    data class Success(val detail: CourseDetailData) :  CourseDetailState()
     data class Error(val message: String?) :  CourseDetailState()
 }

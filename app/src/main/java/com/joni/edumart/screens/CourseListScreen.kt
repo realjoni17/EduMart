@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -40,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.joni.edumart.CourseViewModel
 import com.joni.edumart.R
@@ -50,9 +52,11 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun CourseListScreen(vm : CourseViewModel = hiltViewModel()) {
+fun CourseListScreen(vm : CourseViewModel = hiltViewModel(), navController: NavController) {
 
     val courseList = vm.courses.collectAsState()
+
+
 
 
     LazyVerticalGrid(
@@ -62,19 +66,22 @@ fun CourseListScreen(vm : CourseViewModel = hiltViewModel()) {
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         items(courseList.value) { course ->
-            CourseCard(course = course)
+            CourseCard(course = course, onClick ={
+                navController.navigate("course/${course._id}")
+            } )
         }
     }
 }
 
 @Composable
-fun CourseCard(course: Course) {
+fun CourseCard(course: Course, onClick : () -> Unit = {}) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .heightIn(min = 300.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-        shape = MaterialTheme.shapes.medium
+        shape = MaterialTheme.shapes.medium,
+        onClick = onClick
     ) {
         Column(
             modifier = Modifier
@@ -165,5 +172,5 @@ fun RatingBar(rating: Double) {
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_NO, showSystemUi = true, showBackground = true)
 @Composable
 private fun CourseListScreenPrev() {
-    CourseListScreen()
+    //CourseListScreen()
 }

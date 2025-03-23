@@ -14,3 +14,8 @@ data class CourseDto(
     val ratingAndReviews: List<Any>?,
     val thumbnail: String?
 )
+
+data class CourseResponse(
+    val success : Boolean,
+    val data: List<CourseDto>
+)

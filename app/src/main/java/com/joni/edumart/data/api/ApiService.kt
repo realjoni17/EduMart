@@ -1,9 +1,12 @@
 package com.joni.edumart.data.api
 
 
+import com.google.gson.annotations.SerializedName
 import com.joni.edumart.common.ApiResponse
 import com.joni.edumart.data.api.dto.CourseDto
-import com.joni.edumart.data.api.dto.coursedetail.Data
+import com.joni.edumart.data.api.dto.CourseResponse
+import com.joni.edumart.data.api.dto.coursedetail.CourseDetailData
+import com.joni.edumart.data.api.dto.coursedetail.CourseDetailDataResponse
 import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentRequest
 import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentResponse
 import com.joni.edumart.data.api.dto.paymentdto.SendPaymentSuccessEmailRequest
@@ -26,50 +29,50 @@ interface ApiService {
     /*
     * Authentication Endpoints
     * */
-    @POST("auth/login")
+    @POST("/api/v1/auth/login")
     suspend fun login(@Body request : LoginRequest): Response<LoginResponse>
 
-    @POST("/auth/signup")
+    @POST("/api/v1/auth/signup")
     suspend fun signup(@Body request : SignupRequest): Response<ApiResponse<User>>
 
-    @POST("/auth/sendotp")
+    @POST("/api/v1/auth/sendotp")
     suspend fun sendOtp(@Body request : SendOtpRequest): Response<ApiResponse<Any>>
 
-    @POST("/auth/reset-password")
+    @POST("/api/v1/auth/reset-password")
     suspend fun resetPassword(@Body request : ChangePasswordRequest): Response<ApiResponse<Any>>
 
-    @POST("/auth/reset-password-token")
+    @POST("/api/v1/auth/reset-password-token")
     suspend fun resetPasswordToken(email: String): Response<Unit>
 
     /*
     * Profile Endpoints
     * */
 
-    @GET("/profile/getUserDetails")
+    @GET("/api/v1/profile/getUserDetails")
     suspend fun getUserDetails(): Response<Unit>
 
-    @GET("/profile/getEnrolledCourses")
+    @GET("/api/v1/profile/getEnrolledCourses")
     suspend fun getEnrolledCourses(): Response<Unit>
 
-    @GET("/profile/instructorDashboard")
+    @GET("/api/v1/profile/instructorDashboard")
     suspend fun getInstructorDashboard(): Response<Unit>
 
     /*
     * Student Endpoints
     * */
-    @POST("/payment/capturePayment")
+    @POST("/api/v1/payment/capturePayment")
     suspend fun capturePayment(
         @Header("Authorization") token: String,
         @Body request : CapturePaymentRequest
     ): Response<CapturePaymentResponse>
 
-    @POST("/payment/verifyPayment")
+    @POST("/api/v1/payment/verifyPayment")
     suspend fun verifyPayment(
         @Header("Authorization") token: String,
         @Body request : VerifyPaymentRequest
     ): Response<ApiResponse<Any>>
 
-    @POST("/payment/sendPaymentSuccessEmail")
+    @POST("/api/v1/payment/sendPaymentSuccessEmail")
     suspend fun sendPaymentSuccessEmail(
         @Header("Authorization") token: String,
         @Body request : SendPaymentSuccessEmailRequest
@@ -79,37 +82,39 @@ interface ApiService {
     * Course Endpoints
     * */
 
-    @GET("/course/getAllCourses")
-    suspend fun getCourses(): Response<List<CourseDto>>
+    @GET("/api/v1/course/getAllCourses")
+    suspend fun getCourses(): Response<CourseResponse>
 
-    @POST("/course/getCourseDetails")
-    suspend fun getCourseDetails(@Body courseId: String): Response<Data>
+    data class CourseDetailRequest(@SerializedName("courseId") val courseId: String)
 
-    @PUT("/course/editCourse")
+    @POST("/api/v1/course/getCourseDetails")
+    suspend fun getCourseDetails(@Body request : CourseDetailRequest): Response<CourseDetailDataResponse>
+
+    @PUT("/api/v1/course/editCourse")
     suspend fun editCourse(courseId: String): Response<Unit>
 
-    @GET("/course/showAllCategories")
+    @GET("/api/v1/course/showAllCategories")
     suspend fun showAllCategories(): Response<Unit>
 
-    @GET("/course/getFullCourseDetails")
+    @GET("/api/v1/course/getFullCourseDetails")
     suspend fun getFullCourseDetails(courseId: String): Response<Unit>
 
     /*
     * Rating And Reviews
     * */
-    @GET("/course/getReviews")
+    @GET("/api/v1/course/getReviews")
     suspend fun getReviews(courseId: String): Response<Unit>
 
    /*
    * Setting Api
    * */
-    @PUT("/profile/updateDisplayPicture")
+    @PUT("/api/v1/profile/updateDisplayPicture")
     suspend fun updateDisplayPicture(): Response<Unit>
 
-   @PUT("/profile/updateProfile")
+   @PUT("/api/v1/profile/updateProfile")
     suspend fun updateProfile(): Response<Unit>
 
-    @POST("/auth/changepassword")
+    @POST("/api/v1/auth/changepassword")
     suspend fun updatePassword(): Response<Unit>
 
 

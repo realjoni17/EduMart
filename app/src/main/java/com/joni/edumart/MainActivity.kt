@@ -9,6 +9,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.joni.edumart.presentation.AuthViewModel
+import com.joni.edumart.screens.AppNavigation
+import com.joni.edumart.screens.CourseDetailScreen
 import com.joni.edumart.screens.CourseListScreen
 import com.joni.edumart.screens.LoginScreen
 import com.joni.edumart.ui.theme.EduMartTheme
@@ -17,7 +19,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), PaymentResultListener {
-    val viewModel = viewModels<AuthViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -26,9 +28,7 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                   // ChatbotScreen()
-                    //LoginScreen(viewModel.value)
-                    CourseListScreen()
+                  //  AppNavigation()
                 }
             }
         }
