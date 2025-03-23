@@ -5,8 +5,10 @@ import com.joni.edumart.data.api.ApiService
 import com.joni.edumart.data.offline.CourseDao
 import com.joni.edumart.data.repoimpl.AuthRepoImpl
 import com.joni.edumart.data.repoimpl.CourseRepoImpl
+import com.joni.edumart.data.repoimpl.PaymentRepoImpl
 import com.joni.edumart.domain.repository.AuthRepo
 import com.joni.edumart.domain.repository.CourseRepo
+import com.joni.edumart.domain.repository.PaymentRepo
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +30,11 @@ object RepoModule {
     @Provides
     fun providesAuthRepo(apiService: ApiService): AuthRepo {
         return AuthRepoImpl(apiService)
+    }
+
+    @Singleton
+    @Provides
+    fun providesPaymentRepo(apiService: ApiService): PaymentRepo {
+        return PaymentRepoImpl(apiService)
     }
 }

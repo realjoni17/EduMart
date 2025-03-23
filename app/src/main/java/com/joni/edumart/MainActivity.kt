@@ -9,26 +9,36 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.joni.edumart.presentation.AuthViewModel
+import com.joni.edumart.screens.CourseListScreen
 import com.joni.edumart.screens.LoginScreen
 import com.joni.edumart.ui.theme.EduMartTheme
+import com.razorpay.PaymentResultListener
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), PaymentResultListener {
     val viewModel = viewModels<AuthViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             EduMartTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
                    // ChatbotScreen()
-                    LoginScreen(viewModel.value)
+                    //LoginScreen(viewModel.value)
+                    CourseListScreen()
                 }
             }
         }
+    }
+
+    override fun onPaymentSuccess(p0: String?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onPaymentError(p0: Int, p1: String?) {
+        TODO("Not yet implemented")
     }
 }

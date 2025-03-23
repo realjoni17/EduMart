@@ -1,5 +1,6 @@
 package com.joni.edumart.di
 
+import com.joni.edumart.BuildConfig
 import com.joni.edumart.data.api.ApiService
 import dagger.Module
 import dagger.Provides
@@ -15,7 +16,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    val BaseUrl: String = "https://edtech-server-a3tn.onrender.com/api/v1/"
+    private const val BASEURL: String  = BuildConfig.url
 
     @Singleton
     @Provides
@@ -37,7 +38,7 @@ object NetworkModule {
     @Provides
     fun providesRetrofit(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BaseUrl)
+            .baseUrl(BASEURL)
             .addConverterFactory(providesConvertorFactory())
             .client(provideHttpClient())
             .build()

@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joni.edumart.data.api.dto.coursedetail.Data
-import com.joni.edumart.data.api.request.LoginResponse
 import com.joni.edumart.domain.models.Course
 import com.joni.edumart.domain.repository.CourseRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val courseRepo: CourseRepo) : ViewModel() {
+class CourseViewModel @Inject constructor(private val courseRepo: CourseRepo) : ViewModel() {
     private val _courses = MutableStateFlow<List<Course>>(emptyList())
     val courses: StateFlow<List<Course>> = _courses
 

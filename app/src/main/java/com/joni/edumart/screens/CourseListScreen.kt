@@ -1,5 +1,6 @@
 package com.joni.edumart.screens
 
+import android.annotation.SuppressLint
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,65 +39,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.joni.edumart.CourseViewModel
 import com.joni.edumart.R
+import com.joni.edumart.domain.models.Course
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 
-// Data Classes
-data class Instructor(
-    val _id: String,
-    val firstName: String,
-    val lastName: String,
-    val email: String
-)
 
-data class Course(
-    val _id: String,
-    val courseName: String,
-    val instructor: Instructor,
-    val price: Double,
-    val thumbnail: String,
-    val rating: Double = 0.0, // Added for demo purposes
-    val enrolledStudents: Int = 0
-)
-
-// Dummy Data
-object SampleData {
-    val courses = listOf(
-        Course(
-            _id = "67b9ad14efb70037eadc061d",
-            courseName = "Advanced Web Development",
-            instructor = Instructor(
-                _id = "67b6ff75603c1feb26dce11b",
-                firstName = "Sarah",
-                lastName = "Johnson",
-                email = "s.johnson@example.com"
-            ),
-            price = 15.0,
-            thumbnail = "https://res.cloudinary.com/driahvrov/image/upload/v1740225916/edu_mart/w1bjon9l77ejp4bzoybk.jpg",
-            rating = 4.5,
-            enrolledStudents = 2345
-        ),
-        Course(
-            _id = "68c8be25fgc81148fbee172e",
-            courseName = "Mobile App Development",
-            instructor = Instructor(
-                _id = "78d7gg85724d2feb26dce22c",
-                firstName = "Mike",
-                lastName = "Chen",
-                email = "m.chen@example.com"
-            ),
-            price = 19.99,
-            thumbnail = "https://example.com/mobile-app-dev.jpg",
-            rating = 4.8,
-            enrolledStudents = 1890
-        )
-    )
-}
-
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun CourseListScreen() {
-    val courses = remember { SampleData.courses }
+fun CourseListScreen(vm : CourseViewModel = hiltViewModel()) {
+
+    val courseList = vm.courses.collectAsState()
+
 
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 300.dp),
@@ -103,7 +61,7 @@ fun CourseListScreen() {
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        items(courses) { course ->
+        items(courseList.value) { course ->
             CourseCard(course = course)
         }
     }
@@ -144,7 +102,7 @@ fun CourseCard(course: Course) {
 
             // Course Title
             Text(
-                text = course.courseName,
+                text = course.courseName!!,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -154,7 +112,7 @@ fun CourseCard(course: Course) {
 
             // Instructor Name
             Text(
-                text = "by ${course.instructor.firstName} ${course.instructor.lastName}",
+                text = "by ${course.instructor!!.firstName} ${course.instructor.lastName}",
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
             )
@@ -166,13 +124,13 @@ fun CourseCard(course: Course) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                RatingBar(rating = course.rating)
+              //  RatingBar(rating = course.rating!!)
 
-                Text(
+                /*Text(
                     text = "(${course.enrolledStudents})",
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
-                )
+                )*/
             }
 
             Spacer(modifier = Modifier.height(8.dp))

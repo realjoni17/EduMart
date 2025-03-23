@@ -4,6 +4,10 @@ package com.joni.edumart.data.api
 import com.joni.edumart.common.ApiResponse
 import com.joni.edumart.data.api.dto.CourseDto
 import com.joni.edumart.data.api.dto.coursedetail.Data
+import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentRequest
+import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentResponse
+import com.joni.edumart.data.api.dto.paymentdto.SendPaymentSuccessEmailRequest
+import com.joni.edumart.data.api.dto.paymentdto.VerifyPaymentRequest
 import com.joni.edumart.data.api.request.ChangePasswordRequest
 import com.joni.edumart.data.api.request.LoginRequest
 import com.joni.edumart.data.api.request.LoginResponse
@@ -13,6 +17,7 @@ import com.joni.edumart.domain.models.auth.User
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 
@@ -53,13 +58,22 @@ interface ApiService {
     * Student Endpoints
     * */
     @POST("/payment/capturePayment")
-    suspend fun capturePayment(): Response<Unit>
+    suspend fun capturePayment(
+        @Header("Authorization") token: String,
+        @Body request : CapturePaymentRequest
+    ): Response<CapturePaymentResponse>
 
     @POST("/payment/verifyPayment")
-    suspend fun verifyPayment(): Response<Unit>
+    suspend fun verifyPayment(
+        @Header("Authorization") token: String,
+        @Body request : VerifyPaymentRequest
+    ): Response<ApiResponse<Any>>
 
     @POST("/payment/sendPaymentSuccessEmail")
-    suspend fun sendPaymentSuccessEmail(): Response<Unit>
+    suspend fun sendPaymentSuccessEmail(
+        @Header("Authorization") token: String,
+        @Body request : SendPaymentSuccessEmailRequest
+    ): Response<ApiResponse<Any>>
 
     /*
     * Course Endpoints

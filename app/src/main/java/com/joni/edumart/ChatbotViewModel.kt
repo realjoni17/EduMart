@@ -11,9 +11,11 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+
 class ChatbotViewModel : ViewModel() {
 
-    val key = BuildConfig.apiKey
+    private val key = BuildConfig.apiKey
+    private val instruction = BuildConfig.promt
 
     private val _uiState: MutableStateFlow<UiState> =
         MutableStateFlow(UiState.Initial)
@@ -30,7 +32,7 @@ class ChatbotViewModel : ViewModel() {
             maxOutputTokens = 8192
             responseMimeType = "text/plain"
         },
-        systemInstruction = content { text("You are chatbot developed for EducaionMart by Jauni,  Akshay and Maryam for the students of Cdlsiet. Your task is give answer related to engineering and study. do not answer other questions.  when someone greets you your response should be like hello from EducationMart ") },
+        systemInstruction = content { text(instruction) },
     )
 
     fun sendPrompt(
