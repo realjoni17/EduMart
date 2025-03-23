@@ -2,6 +2,7 @@ package com.joni.edumart.screens
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,7 +48,7 @@ fun PaymentScreen(
 
 
     val context = LocalContext.current as Activity
-    val paymentState by viewModel.paymentState
+    val paymentState by viewModel.paymentState.collectAsState()
 
     LaunchedEffect(paymentState) {
         if (paymentState is PaymentViewModel.PaymentState.OrderCreated) {
@@ -91,7 +93,7 @@ fun startRazorpayPayment(
     courseIds: List<String>
 ) {
     val checkout = Checkout()
-    checkout.setKeyID("your_razorpay_key_id") // Replace with your Razorpay Key ID
+    checkout.setKeyID("rzp_live_qgPlEjf1Rquvcg") // Replace with your Razorpay Key ID
 
     try {
         val options = JSONObject().apply {
@@ -108,7 +110,8 @@ fun startRazorpayPayment(
 
         checkout.open(activity, options)
     } catch (e: Exception) {
-        viewModel.paymentState = PaymentViewModel.PaymentState.Error(e.message ?: "Razorpay error")
+        //viewModel.paymentState = PaymentViewModel.PaymentState.Error(e.message ?: "Razorpay error")
+        Toast.makeText(activity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
     }
 
     // Implement PaymentResultListener in your Activity

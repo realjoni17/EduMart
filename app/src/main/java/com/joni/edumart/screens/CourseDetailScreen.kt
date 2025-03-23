@@ -32,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.joni.edumart.CourseDetailState
 import com.joni.edumart.CourseViewModel
@@ -44,8 +45,9 @@ import com.joni.edumart.data.api.dto.coursedetail.SubSection
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String) {
+fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String, navController: NavController) {
     val courseData by vm.courseDetail.collectAsState()
+
  //   var course: CourseDetailData? = null
     //val courseId = "67c8793c30282fcf69462f8f"
     LaunchedEffect(courseId) {
@@ -63,7 +65,13 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String
                     }
                 }
             )
-        }
+        },
+        floatingActionButton = {
+            Button(modifier = Modifier.fillMaxWidth(), onClick = {navController.navigate("payment/${courseId}")}) {
+                Text("Pay Now")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End
     ) { padding ->
         when (courseData) {
             is CourseDetailState.Success -> {
@@ -149,6 +157,7 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String
                         }
                     }
                 }
+
             }
 
             is CourseDetailState.Error -> Text("Error")
