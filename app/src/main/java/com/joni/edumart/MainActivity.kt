@@ -3,19 +3,15 @@ package com.joni.edumart
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.joni.edumart.common.Constant
-import com.joni.edumart.presentation.AuthViewModel
 import com.joni.edumart.presentation.PaymentViewModel
-import com.joni.edumart.screens.AppNavigation
-import com.joni.edumart.screens.CourseDetailScreen
-import com.joni.edumart.screens.CourseListScreen
-import com.joni.edumart.screens.EnrolledCoursesScreen
-import com.joni.edumart.screens.LoginScreen
+import com.joni.edumart.screens.navigation.AppNavigation
 import com.joni.edumart.ui.theme.EduMartTheme
 import com.razorpay.PaymentResultListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +21,7 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
     private val viewModel: PaymentViewModel by viewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         setContent {
             EduMartTheme {
                 Surface(
