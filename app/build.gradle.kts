@@ -68,16 +68,17 @@ dependencies {
     implementation (libs.hilt.android) //Hilt
     kapt (libs.hilt.compiler) //Hilt Compiler
     implementation (libs.retrofit) //Retrofit
-    // implementation(libs.coil.compose)  //Coil
     implementation(libs.logging.interceptor)  //Logging Interceptor
     implementation (libs.converter.gson)  //Gson
-    // implementation (libs.compose)  //Glide
-
-  //  implementation (libs.androidx.navigation.compose)
-    //implementation(libs.kotlinx.serialization.json) // Serialization library
     implementation(libs.androidx.room.runtime)
     kapt (libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.checkout)
     implementation (libs.hilt.navigation.compose)
+    implementation(libs.compose.video)
+    implementation(libs.androidx.media3.exoplayer) // [Required] androidx.media3 ExoPlayer dependency
+    implementation(libs.media3.session) // [Required] MediaSession Extension dependency
+    implementation(libs.androidx.media3.ui) // [Required] Base Player UI
+    implementation(libs.androidx.media3.exoplayer.dash) // [Optional] If your media item is DASH
+    implementation(libs.androidx.media3.exoplayer.hls) // [Optional] If your media item is HLS (m3u8..)
 }

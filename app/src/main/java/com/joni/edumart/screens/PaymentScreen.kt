@@ -31,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.joni.edumart.BuildConfig
 import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentResponse
 import com.joni.edumart.presentation.PaymentViewModel
 import com.razorpay.Checkout
@@ -92,19 +93,20 @@ fun startRazorpayPayment(
     token: String,
     courseIds: List<String>
 ) {
+    val key = BuildConfig.razorpay
     val checkout = Checkout()
-    checkout.setKeyID("rzp_live_qgPlEjf1Rquvcg") // Replace with your Razorpay Key ID
+    checkout.setKeyID(key)
 
     try {
         val options = JSONObject().apply {
-            put("name", "Your App Name")
+            put("name", "EduMart")
             put("description", "Course Payment")
             put("order_id", data.id)
             put("currency", data.currency)
             put("amount", data.amount)
             put("prefill", JSONObject().apply {
-                put("email", "user@example.com") // Replace with user email
-                put("contact", "1234567890") // Replace with user contact
+                put("email", "jaunivashisth@gmail.com")
+                put("contact", "9306309119")
             })
         }
 

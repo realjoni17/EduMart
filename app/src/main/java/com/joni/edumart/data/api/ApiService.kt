@@ -7,10 +7,12 @@ import com.joni.edumart.data.api.dto.CourseDto
 import com.joni.edumart.data.api.dto.CourseResponse
 import com.joni.edumart.data.api.dto.coursedetail.CourseDetailData
 import com.joni.edumart.data.api.dto.coursedetail.CourseDetailDataResponse
+import com.joni.edumart.data.api.dto.enrolledcoursedto.EnrolledCourseDto
 import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentRequest
 import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentResponse
 import com.joni.edumart.data.api.dto.paymentdto.SendPaymentSuccessEmailRequest
 import com.joni.edumart.data.api.dto.paymentdto.VerifyPaymentRequest
+import com.joni.edumart.data.api.dto.userdetails.UserDetailsDto
 import com.joni.edumart.data.api.request.ChangePasswordRequest
 import com.joni.edumart.data.api.request.LoginRequest
 import com.joni.edumart.data.api.request.LoginResponse
@@ -49,10 +51,14 @@ interface ApiService {
     * */
 
     @GET("/api/v1/profile/getUserDetails")
-    suspend fun getUserDetails(): Response<Unit>
+    suspend fun getUserDetails(
+        @Header("Authorization") token: String
+    ): Response<UserDetailsDto>
 
     @GET("/api/v1/profile/getEnrolledCourses")
-    suspend fun getEnrolledCourses(): Response<Unit>
+    suspend fun getEnrolledCourses(
+        @Header("Authorization") token: String
+    ): Response<EnrolledCourseDto>
 
     @GET("/api/v1/profile/instructorDashboard")
     suspend fun getInstructorDashboard(): Response<Unit>

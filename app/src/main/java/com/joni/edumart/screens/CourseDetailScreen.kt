@@ -84,7 +84,7 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String
                 ) {
                     item {
                         AsyncImage(
-                            model = course?.courseDetails?.thumbnail,
+                            model = course.courseDetails.thumbnail,
                             contentDescription = "Course thumbnail",
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -95,7 +95,7 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        course?.courseDetails?.let {
+                        course.courseDetails.let {
                             Text(
                                 text = it.courseName,
                                 style = MaterialTheme.typography.headlineMedium,
@@ -105,7 +105,7 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        course?.courseDetails?.let {
+                        course.courseDetails.let {
                             Text(
                                 text = it.courseDescription,
                                 style = MaterialTheme.typography.bodyLarge,
@@ -115,20 +115,20 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        course?.courseDetails?.let { InstructorInfo(instructor = it.instructor) }
+                        InstructorInfo(instructor = course.courseDetails.instructor)
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        course?.courseDetails?.let {
+                        course.courseDetails.let {
                             CourseMetaInfo(
                                 price = it.price,
-                                duration = course!!.totalDuration
+                                duration = course.totalDuration
                             )
                         }
 
                         Spacer(modifier = Modifier.height(16.dp))
 
-                        course?.courseDetails?.let { TagsSection(tags = it.tag) }
+                        TagsSection(tags = course.courseDetails.tag)
 
                         Spacer(modifier = Modifier.height(24.dp))
 
@@ -140,21 +140,17 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        course?.courseDetails?.let {
-                            Text(
-                                text = it.whatYouWillLearn,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
+                        Text(
+                            text = course.courseDetails.whatYouWillLearn,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
 
                         Spacer(modifier = Modifier.height(24.dp))
                     }
 
-                    course?.courseDetails?.let {
-                        items(it.courseContent) { section ->
-                            CourseSection(section = section)
-                            Spacer(modifier = Modifier.height(16.dp))
-                        }
+                    items(course.courseDetails.courseContent) { section ->
+                        CourseSection(section = section)
+                        Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
 

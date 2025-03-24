@@ -14,6 +14,7 @@ import com.joni.edumart.presentation.PaymentViewModel
 import com.joni.edumart.screens.AppNavigation
 import com.joni.edumart.screens.CourseDetailScreen
 import com.joni.edumart.screens.CourseListScreen
+import com.joni.edumart.screens.EnrolledCoursesScreen
 import com.joni.edumart.screens.LoginScreen
 import com.joni.edumart.ui.theme.EduMartTheme
 import com.razorpay.PaymentResultListener
@@ -30,7 +31,8 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                   AppNavigation()
+                  AppNavigation()
+                    //EnrolledCoursesScreen()
                 }
             }
         }
