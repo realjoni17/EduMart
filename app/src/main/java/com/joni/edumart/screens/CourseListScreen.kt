@@ -57,8 +57,6 @@ fun CourseListScreen(vm : CourseViewModel = hiltViewModel(), navController: NavC
     val courseList = vm.courses.collectAsState()
 
 
-
-
     LazyVerticalGrid(
         columns = GridCells.Adaptive(minSize = 300.dp),
         contentPadding = PaddingValues(16.dp),

@@ -5,14 +5,17 @@ import androidx.lifecycle.viewModelScope
 import com.google.ai.client.generativeai.GenerativeModel
 import com.google.ai.client.generativeai.type.content
 import com.google.ai.client.generativeai.type.generationConfig
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
-class ChatbotViewModel : ViewModel() {
+@HiltViewModel
+class ChatbotViewModel @Inject constructor() : ViewModel() {
 
     private val key = BuildConfig.apiKey
     private val instruction = BuildConfig.promt

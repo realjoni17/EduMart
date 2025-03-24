@@ -1,11 +1,10 @@
 package com.joni.edumart.screens.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Home
@@ -18,6 +17,7 @@ import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -40,6 +40,7 @@ import androidx.navigation.navArgument
 import com.joni.edumart.common.Constant
 import com.joni.edumart.screens.CourseDetailScreen
 import com.joni.edumart.screens.CourseListScreen
+import com.joni.edumart.screens.EduMartFloatingActionButton
 import com.joni.edumart.screens.EnrolledCoursesScreen
 import com.joni.edumart.screens.PaymentScreen
 import com.joni.edumart.screens.VideoPlayerScreen
@@ -70,25 +71,33 @@ fun AppNavigation() {
     val currentRoute = navBackStackEntry?.destination?.route
 
 
-    val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}")
+    val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}")
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
             if (currentRoute !in hideUIOnScreens)
-            Column(modifier = Modifier.fillMaxSize().padding(16.dp)){
-                Text("Menu", fontSize = 20.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(16.dp))
-                drawerItems.forEach{ items ->
-                    DrawerItemView(items) {
-                        coroutineScope.launch { drawerState.close() }
-                        when(items.route){
-                            "logout" -> {}
-                            else -> navController.navigate(items.route)
-                        }
+                ModalDrawerSheet(
+                    modifier = Modifier.width(250.dp)
+                ) { // This makes sure the drawer doesn't take the full screen
+                    Text(
+                        text = "Menu",
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                    DrawerItemView(DrawerItem("settings", "Settings", Icons.Default.Settings)) {
+                        navController.navigate(Screen.Settings.route)
+                        coroutineScope.launch { drawerState.close() } // Close drawer after navigation
                     }
-
+                    DrawerItemView(DrawerItem("help", "Help", Icons.Default.Info)) {
+                        navController.navigate(Screen.Help.route)
+                        coroutineScope.launch { drawerState.close() }
+                    }
+                    DrawerItemView(DrawerItem("logout", "Logout", Icons.Default.ExitToApp)) {
+                        coroutineScope.launch { drawerState.close() }
+                    }
                 }
-            }
         }
 
     ) {
@@ -110,7 +119,8 @@ fun AppNavigation() {
                         }
                     }
                 )
-            }
+            },
+            floatingActionButton = { EduMartFloatingActionButton(modifier = Modifier) }
         ) {  padding ->
 
             NavHost(modifier = Modifier.padding(padding).navigationBarsPadding().statusBarsPadding(), navController = navController, startDestination = "courses") {
