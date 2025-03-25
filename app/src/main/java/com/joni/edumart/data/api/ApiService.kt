@@ -12,13 +12,14 @@ import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentRequest
 import com.joni.edumart.data.api.dto.paymentdto.CapturePaymentResponse
 import com.joni.edumart.data.api.dto.paymentdto.SendPaymentSuccessEmailRequest
 import com.joni.edumart.data.api.dto.paymentdto.VerifyPaymentRequest
+import com.joni.edumart.data.api.dto.signupdto.SignUpDto
 import com.joni.edumart.data.api.dto.userdetails.UserDetailsDto
 import com.joni.edumart.data.api.request.ChangePasswordRequest
 import com.joni.edumart.data.api.request.LoginRequest
 import com.joni.edumart.data.api.request.LoginResponse
 import com.joni.edumart.data.api.request.SendOtpRequest
 import com.joni.edumart.data.api.request.SignupRequest
-import com.joni.edumart.domain.models.auth.User
+
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -35,7 +36,7 @@ interface ApiService {
     suspend fun login(@Body request : LoginRequest): Response<LoginResponse>
 
     @POST("/api/v1/auth/signup")
-    suspend fun signup(@Body request : SignupRequest): Response<ApiResponse<User>>
+    suspend fun signup(@Body request : SignupRequest): Response<ApiResponse<SignUpDto>>
 
     @POST("/api/v1/auth/sendotp")
     suspend fun sendOtp(@Body request : SendOtpRequest): Response<ApiResponse<Any>>

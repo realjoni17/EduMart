@@ -6,7 +6,7 @@ data class SignupRequest(
     val email: String,
     val password: String,
     val confirmPassword: String,
-    val accountType: String? = null,
+    val accountType: String? = "Student",
     val contactNumber: String? = null
-    // val otp: String // Uncomment if OTP is required
+
 )

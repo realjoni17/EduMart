@@ -1,11 +1,14 @@
 package com.joni.edumart.data.repoimpl
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import com.joni.edumart.data.api.ApiService
+import com.joni.edumart.data.api.dto.signupdto.User
 import com.joni.edumart.data.api.request.LoginRequest
 import com.joni.edumart.data.api.request.LoginResponse
 import com.joni.edumart.data.api.request.SendOtpRequest
 import com.joni.edumart.data.api.request.SignupRequest
-import com.joni.edumart.domain.models.auth.User
+
 import com.joni.edumart.domain.repository.AuthRepo
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -33,12 +36,13 @@ class AuthRepoImpl @Inject constructor(private val apiService: ApiService) : Aut
             throw Exception(e.message)
         }
     }
-
-    override suspend fun signup(email: String,
-                                password: String,
-                                firstname : String,
-                                lastname : String,
-                                confirmpassword : String): Flow<User> {
+    override suspend fun signup(
+        email: String,
+        password: String,
+        firstname: String,
+        lastname: String,
+        confirmpassword: String
+    ): Flow<User> = flow {
         val request = SignupRequest(
             email = email,
             password = password,
@@ -46,20 +50,19 @@ class AuthRepoImpl @Inject constructor(private val apiService: ApiService) : Aut
             lastName = lastname,
             confirmPassword = confirmpassword
         )
-        try {
-            val response = apiService.signup(request)
-            if (response.isSuccessful) {
-                val user = response.body()?.data
-                if (user != null) {
-                    return flow { emit(user) } // return user as flow
-                } else {
-                    throw Exception("User not found")
-                }
+
+        val response = apiService.signup(request)
+
+        if (response.isSuccessful) {
+            val responseBody = response.body()
+            if (responseBody?.success == true && responseBody.user != null) {
+                Log.d(TAG, "signup: ${responseBody.user.user}")
+                emit(responseBody.user.user!!)
             } else {
-                throw Exception(response.errorBody().toString())
+                throw Exception("Signup failed: User data is null")
             }
-        } catch (e: Exception) {
-            throw Exception(e.message)
+        } else {
+            throw Exception(response.errorBody()?.string() ?: "Unknown error")
         }
     }
 
@@ -77,9 +80,10 @@ class AuthRepoImpl @Inject constructor(private val apiService: ApiService) : Aut
         }
     }
 }
+/*
 
 fun LoginResponse.toDomain() : User{ this.user
-    return User(
+    return com.joni.edumart.data.api.request.User(
         _id = this.user._id,
         email = this.user.email,
         firstName = this.user.firstName,
@@ -87,4 +91,4 @@ fun LoginResponse.toDomain() : User{ this.user
         accountType = this.user.accountType,
         contactNumber = this.user.token
     )
-}
+}*/

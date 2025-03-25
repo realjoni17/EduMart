@@ -1,7 +1,8 @@
 package com.joni.edumart.domain.repository
 
+import com.joni.edumart.data.api.dto.signupdto.User
 import com.joni.edumart.data.api.request.LoginResponse
-import com.joni.edumart.domain.models.auth.User
+
 import kotlinx.coroutines.flow.Flow
 
 interface AuthRepo {
