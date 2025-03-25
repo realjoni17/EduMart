@@ -9,8 +9,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.joni.edumart.common.Constant
 import com.joni.edumart.presentation.PaymentViewModel
+import com.joni.edumart.screens.CourseListScreen
+import com.joni.edumart.screens.ProfileScreen
 import com.joni.edumart.screens.navigation.AppNavigation
 import com.joni.edumart.ui.theme.EduMartTheme
 import com.razorpay.PaymentResultListener
@@ -19,17 +22,19 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity(), PaymentResultListener {
     private val viewModel: PaymentViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             EduMartTheme {
+                val navController = rememberNavController()
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                  AppNavigation()
-                    //EnrolledCoursesScreen()
+                  //AppNavigation()
+                    ProfileScreen(navController = navController)
                 }
             }
         }

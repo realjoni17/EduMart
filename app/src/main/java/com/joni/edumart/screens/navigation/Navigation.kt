@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
@@ -43,6 +44,7 @@ import com.joni.edumart.screens.CourseListScreen
 import com.joni.edumart.screens.EduMartFloatingActionButton
 import com.joni.edumart.screens.EnrolledCoursesScreen
 import com.joni.edumart.screens.PaymentScreen
+import com.joni.edumart.screens.ProfileScreen
 import com.joni.edumart.screens.VideoPlayerScreen
 import kotlinx.coroutines.launch
 
@@ -71,7 +73,7 @@ fun AppNavigation() {
     val currentRoute = navBackStackEntry?.destination?.route
 
 
-    val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}")
+   val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}")
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -120,7 +122,8 @@ fun AppNavigation() {
                     }
                 )
             },
-            floatingActionButton = { EduMartFloatingActionButton(modifier = Modifier) }
+            floatingActionButton = { EduMartFloatingActionButton(modifier = Modifier) },
+            floatingActionButtonPosition = FabPosition.End
         ) {  padding ->
 
             NavHost(modifier = Modifier.padding(padding).navigationBarsPadding().statusBarsPadding(), navController = navController, startDestination = "courses") {
@@ -152,6 +155,9 @@ fun AppNavigation() {
                 }
                 composable("enrolled") {
                     EnrolledCoursesScreen(navController = navController)
+                }
+                composable("profile") {
+                    ProfileScreen(navController = navController)
                 }
 
             }
