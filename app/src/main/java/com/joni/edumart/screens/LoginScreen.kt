@@ -24,16 +24,21 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.joni.edumart.presentation.AuthViewModel
+import com.joni.edumart.presentation.TokenViewModel
 
 import kotlinx.coroutines.launch
 @Composable
-fun LoginScreen(viewModel: AuthViewModel ) {
+fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(),
+                tokenViewModel: TokenViewModel = hiltViewModel()) {
     val loginState by viewModel.loginState.collectAsState()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val token = tokenViewModel.token.collectAsState().value
+    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -94,7 +99,9 @@ fun LoginScreen(viewModel: AuthViewModel ) {
             }
 
             is AuthViewModel.LoginState.Success -> {
-                Text(text = "Login Successful!", color = Color.Green)
+                Text(text = "Login Successful! and token is $token", color = Color.Green)
+                 LaunchedEffect(Unit) {  tokenViewModel.saveToken((loginState as AuthViewModel.LoginState.Success).user.token) }
+
             }
 
             is AuthViewModel.LoginState.Error -> {

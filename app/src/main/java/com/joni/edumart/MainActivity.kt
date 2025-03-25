@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import com.joni.edumart.common.Constant
 import com.joni.edumart.presentation.PaymentViewModel
 import com.joni.edumart.screens.CourseListScreen
+import com.joni.edumart.screens.LoginScreen
 import com.joni.edumart.screens.ProfileScreen
 import com.joni.edumart.screens.navigation.AppNavigation
 import com.joni.edumart.ui.theme.EduMartTheme
@@ -34,7 +35,8 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
                     color = MaterialTheme.colorScheme.background,
                 ) {
                   //AppNavigation()
-                    ProfileScreen(navController = navController)
+                    //ProfileScreen(navController = navController)
+                    LoginScreen()
                 }
             }
         }
