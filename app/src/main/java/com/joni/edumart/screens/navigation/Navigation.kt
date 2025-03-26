@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,7 +24,6 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -39,10 +39,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.joni.edumart.common.Constant
+import com.joni.edumart.screens.ChatbotUiScreen
 import com.joni.edumart.screens.CourseDetailScreen
 import com.joni.edumart.screens.CourseListScreen
-import com.joni.edumart.screens.EduMartFloatingActionButton
+
 import com.joni.edumart.screens.EnrolledCoursesScreen
+import com.joni.edumart.screens.LoginScreen
 import com.joni.edumart.screens.PaymentScreen
 import com.joni.edumart.screens.ProfileScreen
 import com.joni.edumart.screens.VideoPlayerScreen
@@ -59,7 +61,8 @@ fun AppNavigation() {
 
     val bottomNavItems = listOf(
         BottomNavItem("courses", "Courses", Icons.Default.Home),
-        BottomNavItem("enrolled", "Enrolled", Icons.Default.List),
+        BottomNavItem("enrolled", "My Courses", Icons.Default.List),
+        BottomNavItem("Chat","chat", Icons.Default.Search),
         BottomNavItem("profile", "Profile", Icons.Default.Person)
     )
     val drawerItems = listOf(
@@ -122,8 +125,8 @@ fun AppNavigation() {
                     }
                 )
             },
-            floatingActionButton = { EduMartFloatingActionButton(modifier = Modifier) },
-            floatingActionButtonPosition = FabPosition.End
+           // floatingActionButton = { EduMartFloatingActionButton() },
+           // floatingActionButtonPosition = FabPosition.End
         ) {  padding ->
 
             NavHost(modifier = Modifier.padding(padding).navigationBarsPadding().statusBarsPadding(), navController = navController, startDestination = "courses") {
@@ -158,6 +161,12 @@ fun AppNavigation() {
                 }
                 composable("profile") {
                     ProfileScreen(navController = navController)
+                }
+                composable("chat") {
+                    ChatbotUiScreen()
+                }
+                composable("login") {
+                    LoginScreen()
                 }
 
             }

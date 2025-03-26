@@ -1,5 +1,6 @@
 package com.joni.edumart.screens
 
+import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -39,21 +40,31 @@ import com.joni.edumart.CourseViewModel
 import com.joni.edumart.data.api.dto.coursedetail.CourseContent
 import com.joni.edumart.data.api.dto.coursedetail.CourseDetailData
 import com.joni.edumart.data.api.dto.coursedetail.SubSection
+import com.joni.edumart.presentation.TokenViewModel
 
 
-
-
+@SuppressLint("StateFlowValueCalledInComposition")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(), courseId : String, navController: NavController) {
+fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(),
+                       courseId : String,
+                       navController: NavController,
+                       token : TokenViewModel = hiltViewModel()
+) {
     val courseData by vm.courseDetail.collectAsState()
+     val user = token.isUserLoggedIn()
 
- //   var course: CourseDetailData? = null
-    //val courseId = "67c8793c30282fcf69462f8f"
+
+
     LaunchedEffect(courseId) {
         vm.loadCourseDetails(courseId)  // Pass courseId from navigation
     }
-    Log.d(TAG, "CourseDetailScreen: $courseData")
+    LaunchedEffect(Unit) {
+        token.isUserLoggedIn()
+        if (!user){
+            navController.navigate("login")
+        }
+    }
 
     Scaffold(
         topBar = {

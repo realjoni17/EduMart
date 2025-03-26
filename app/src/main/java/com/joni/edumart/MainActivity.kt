@@ -11,13 +11,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.joni.edumart.common.Constant
-import com.joni.edumart.presentation.AuthViewModel
 import com.joni.edumart.presentation.PaymentViewModel
-import com.joni.edumart.screens.CourseListScreen
-import com.joni.edumart.screens.LoginScreen
-import com.joni.edumart.screens.ProfileScreen
 import com.joni.edumart.screens.navigation.AppNavigation
-import com.joni.edumart.screens.navigation.SignupScreen
 import com.joni.edumart.ui.theme.EduMartTheme
 import com.razorpay.PaymentResultListener
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,10 +31,7 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                  //AppNavigation()
-                    //ProfileScreen(navController = navController)
-                    //LoginScreen()
-                    SignupScreen(navController = navController)
+                  AppNavigation()
                 }
             }
         }
