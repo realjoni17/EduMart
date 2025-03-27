@@ -55,18 +55,27 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 fun CourseListScreen(vm : CourseViewModel = hiltViewModel(), navController: NavController) {
 
     val courseList = vm.courses.collectAsState()
+    Column {
 
+        Text(
+            "   Hi User! How are you today?",
+            style = MaterialTheme.typography.titleLarge,
+            fontWeight = FontWeight.Bold,
+            // modifier = Modifier.padding(16.dp)
+        )
+       // Spacer(modifier = Modifier.height(76.dp))
 
-    LazyVerticalGrid(
-        columns = GridCells.Adaptive(minSize = 300.dp),
-        contentPadding = PaddingValues(16.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        items(courseList.value) { course ->
-            CourseCard(course = course, onClick ={
-                navController.navigate("course/${course._id}")
-            } )
+        LazyVerticalGrid(
+            columns = GridCells.Adaptive(minSize = 300.dp),
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            items(courseList.value) { course ->
+                CourseCard(course = course, onClick = {
+                    navController.navigate("course/${course._id}")
+                })
+            }
         }
     }
 }
@@ -86,7 +95,7 @@ fun CourseCard(course: Course, onClick : () -> Unit = {}) {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Course Thumbnail
+
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -129,13 +138,7 @@ fun CourseCard(course: Course, onClick : () -> Unit = {}) {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-              //  RatingBar(rating = course.rating!!)
 
-                /*Text(
-                    text = "(${course.enrolledStudents})",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
-                )*/
             }
 
             Spacer(modifier = Modifier.height(8.dp))
