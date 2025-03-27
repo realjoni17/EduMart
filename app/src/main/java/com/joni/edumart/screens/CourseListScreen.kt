@@ -63,7 +63,7 @@ fun CourseListScreen(vm : CourseViewModel = hiltViewModel(), navController: NavC
             fontWeight = FontWeight.Bold,
             // modifier = Modifier.padding(16.dp)
         )
-       // Spacer(modifier = Modifier.height(76.dp))
+
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 300.dp),

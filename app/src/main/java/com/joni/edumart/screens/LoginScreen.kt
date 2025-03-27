@@ -2,6 +2,7 @@ package com.joni.edumart.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_NO
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -30,7 +31,7 @@ import androidx.navigation.compose.rememberNavController
 import com.joni.edumart.presentation.AuthViewModel
 import com.joni.edumart.presentation.TokenViewModel
 
-import kotlinx.coroutines.launch
+
 @Composable
 fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(),
                 tokenViewModel: TokenViewModel = hiltViewModel(),
@@ -111,7 +112,8 @@ fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(),
             }
 
             is AuthViewModel.LoginState.Success -> {
-                Text(text = "Login Successful! and token is $token", color = Color.Green)
+               Toast.makeText(LocalContext.current, "Login Successful", Toast.LENGTH_SHORT).show()
+                navController.navigate("courses")
                  LaunchedEffect(Unit) {  tokenViewModel.saveToken((loginState as AuthViewModel.LoginState.Success).user.token) }
 
             }

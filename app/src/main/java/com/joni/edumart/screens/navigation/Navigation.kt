@@ -72,7 +72,7 @@ fun AppNavigation() {
     val currentRoute = navBackStackEntry?.destination?.route
 
 
-   val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}", "splash", "login")
+   val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}", "splash", "login", "signup")
 
     ModalNavigationDrawer(
         drawerState = drawerState,
