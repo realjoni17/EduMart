@@ -47,6 +47,7 @@ import com.joni.edumart.screens.EnrolledCoursesScreen
 import com.joni.edumart.screens.LoginScreen
 import com.joni.edumart.screens.PaymentScreen
 import com.joni.edumart.screens.ProfileScreen
+import com.joni.edumart.screens.SplashScreen
 import com.joni.edumart.screens.VideoPlayerScreen
 import kotlinx.coroutines.launch
 
@@ -134,7 +135,7 @@ fun AppNavigation() {
                 .navigationBarsPadding()
                 .statusBarsPadding(),
                 navController = navController,
-                startDestination = "login") {
+                startDestination = "splash") {
 
                 composable("courses") { CourseListScreen(navController = navController) }
                 composable("course/{id}") { backStackEntry ->
@@ -171,11 +172,11 @@ fun AppNavigation() {
                     ChatbotUiScreen()
                 }
                 composable("login") {
-                    LoginScreen(onLoginSuccess = {
-                        navController.navigate("courses")
-                    })
+                    LoginScreen()
                 }
-            }
+                composable("splash") {
+                    SplashScreen(navController = navController)
+                }            }
         }
       }
     }
