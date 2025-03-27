@@ -66,18 +66,13 @@ fun AppNavigation() {
         BottomNavItem("Chat","chat", Icons.Default.Search),
         BottomNavItem("profile", "Profile", Icons.Default.Person)
     )
-    val drawerItems = listOf(
-        DrawerItem("settings", "Settings", Icons.Default.Settings),
-        DrawerItem("help", "Help", Icons.Default.Info),
-        DrawerItem("logout", "Logout", Icons.Default.ExitToApp)
-    )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
 
     val currentRoute = navBackStackEntry?.destination?.route
 
 
-   val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}")
+   val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}", "splash", "login")
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -126,10 +121,7 @@ fun AppNavigation() {
                     }
                 )
             },
-           // floatingActionButton = { EduMartFloatingActionButton() },
-           // floatingActionButtonPosition = FabPosition.End
-        ) {  padding ->
-
+            ) {  padding ->
             NavHost(modifier = Modifier
                 .padding(padding)
                 .navigationBarsPadding()
@@ -172,12 +164,16 @@ fun AppNavigation() {
                     ChatbotUiScreen()
                 }
                 composable("login") {
-                    LoginScreen()
+                    LoginScreen(navController = navController)
                 }
                 composable("splash") {
                     SplashScreen(navController = navController)
-                }            }
+                }
+            composable("signup") {
+                SignupScreen(navController = navController)
+            }
+            }}
         }
       }
-    }
+
 

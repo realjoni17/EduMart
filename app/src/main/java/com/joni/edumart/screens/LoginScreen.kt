@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.joni.edumart.presentation.AuthViewModel
 import com.joni.edumart.presentation.TokenViewModel
@@ -33,6 +34,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(),
                 tokenViewModel: TokenViewModel = hiltViewModel(),
+                navController: NavController
                 ) {
     val loginState by viewModel.loginState.collectAsState()
 
@@ -95,7 +97,12 @@ fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(),
             Text(text = "Login")
         }
 
+
         Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(onClick = {navController.navigate("signup")}) {
+            Text("New User? Register here")
+        }
 
         // Handle Login State
         when (loginState) {

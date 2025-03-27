@@ -64,11 +64,7 @@ import com.joni.edumart.presentation.UserDataState
 fun Profile(data : UserData) {
 
     val lastname : String? = data.lastName ?: ""
-    Scaffold(topBar = {
-        TopAppBar(
-            title = { Text("Profile") }
-        )
-    }) { paddingValues ->
+    Scaffold() { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -123,8 +119,10 @@ fun ProfileScreen(vm : ProfileViewModel = hiltViewModel(),
                   tokenViewModel: TokenViewModel = hiltViewModel()) {
     val state by vm.userDetailsState.collectAsState()
    val token = tokenViewModel.token.collectAsState().value
-    LaunchedEffect(Unit) {
-        vm.fetchUserDetails(token!!)
+    LaunchedEffect(token) {
+       if (token != null)
+        vm.fetchUserDetails(token)
+
     }
     Log.d(TAG, "ProfileScreen: $state")
     if(state is UserDataState.Loading){
