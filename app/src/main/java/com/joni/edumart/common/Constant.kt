@@ -1,0 +1,5 @@
+package com.joni.edumart.common
+
+object Constant {
+    const val TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImphdW5pdmFzaGlzdGhAZ21haWwuY29tIiwiaWQiOiI2N2NhNmIxMzZmMzJlNmRjNmNlOGNlMDEiLCJpYXQiOjE3NDI4NTQxOTcsImV4cCI6MTc0Mjk0MDU5N30.1mpjVsTpMDrznfKNIMB5KP3RhxOMwoZO4jJ7Q9_2vww"
+}
