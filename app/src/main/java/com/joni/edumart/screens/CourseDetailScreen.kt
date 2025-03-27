@@ -1,6 +1,7 @@
 package com.joni.edumart.screens
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -30,6 +31,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,46 +42,57 @@ import com.joni.edumart.CourseViewModel
 import com.joni.edumart.data.api.dto.coursedetail.CourseContent
 import com.joni.edumart.data.api.dto.coursedetail.CourseDetailData
 import com.joni.edumart.data.api.dto.coursedetail.SubSection
+import com.joni.edumart.presentation.PaymentViewModel
 import com.joni.edumart.presentation.TokenViewModel
 
 
-@SuppressLint("StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(),
                        courseId : String,
                        navController: NavController,
-                       token : TokenViewModel = hiltViewModel()
+                       token : TokenViewModel = hiltViewModel(),
+                       viewModel: PaymentViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current as Activity
     val courseData by vm.courseDetail.collectAsState()
-     val user = token.isUserLoggedIn()
+    val isUserLoggedIn by token.isUserLoggedIn.collectAsState()
+    val paymentState by viewModel.paymentState.collectAsState()
+    val tokenId = token.token.collectAsState().value
+    val courses = listOf(courseId)
 
-
-
-    LaunchedEffect(courseId) {
-        vm.loadCourseDetails(courseId)  // Pass courseId from navigation
-    }
-    LaunchedEffect(Unit) {
-        token.isUserLoggedIn()
-        if (!user){
-            navController.navigate("login")
+    LaunchedEffect(paymentState) {
+        if (paymentState is PaymentViewModel.PaymentState.OrderCreated) {
+            val data = (paymentState as PaymentViewModel.PaymentState.OrderCreated).data
+            startRazorpayPayment(context, data,viewModel ,tokenId!!, courses)
         }
     }
+
+    LaunchedEffect(courseId) {
+        vm.loadCourseDetails(courseId)
+    }
+
+
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Course Details") },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back */ }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         },
         floatingActionButton = {
-            Button(modifier = Modifier.fillMaxWidth(), onClick = {navController.navigate("payment/${courseId}")}) {
-                Text("Pay Now")
+            Button(modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    viewModel.capturePayment(tokenId!!, courses)
+                }
+                ) {
+                Text("Buy Now")
             }
         },
         floatingActionButtonPosition = FabPosition.End

@@ -47,7 +47,6 @@ fun PaymentScreen(
     viewModel: PaymentViewModel = hiltViewModel()
 ) {
 
-
     val context = LocalContext.current as Activity
     val paymentState by viewModel.paymentState.collectAsState()
 

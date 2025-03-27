@@ -84,7 +84,7 @@ fun AppNavigation() {
             if (currentRoute !in hideUIOnScreens)
                 ModalDrawerSheet(
                     modifier = Modifier.width(250.dp)
-                ) { // This makes sure the drawer doesn't take the full screen
+                ) {
                     Text(
                         text = "Menu",
                         fontSize = 20.sp,
@@ -129,7 +129,12 @@ fun AppNavigation() {
            // floatingActionButtonPosition = FabPosition.End
         ) {  padding ->
 
-            NavHost(modifier = Modifier.padding(padding).navigationBarsPadding().statusBarsPadding(), navController = navController, startDestination = "courses") {
+            NavHost(modifier = Modifier
+                .padding(padding)
+                .navigationBarsPadding()
+                .statusBarsPadding(),
+                navController = navController,
+                startDestination = "login") {
 
                 composable("courses") { CourseListScreen(navController = navController) }
                 composable("course/{id}") { backStackEntry ->
@@ -166,12 +171,12 @@ fun AppNavigation() {
                     ChatbotUiScreen()
                 }
                 composable("login") {
-                    LoginScreen()
+                    LoginScreen(onLoginSuccess = {
+                        navController.navigate("courses")
+                    })
                 }
-
             }
         }
-
-    }
+      }
     }
 

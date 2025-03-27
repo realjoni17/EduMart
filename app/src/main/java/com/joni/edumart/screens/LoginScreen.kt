@@ -32,13 +32,25 @@ import com.joni.edumart.presentation.TokenViewModel
 import kotlinx.coroutines.launch
 @Composable
 fun LoginScreen(viewModel: AuthViewModel = hiltViewModel(),
-                tokenViewModel: TokenViewModel = hiltViewModel()) {
+                tokenViewModel: TokenViewModel = hiltViewModel(),
+                onLoginSuccess : () -> Unit) {
     val loginState by viewModel.loginState.collectAsState()
 
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val token = tokenViewModel.token.collectAsState().value
     val scope = rememberCoroutineScope()
+    var isLoading by remember { mutableStateOf(false) }
+
+
+
+
+    LaunchedEffect(tokenViewModel.isUserLoggedIn) {
+        if (tokenViewModel.isUserLoggedIn.value) {
+            onLoginSuccess()
+        }
+
+    }
 
     Column(
         modifier = Modifier

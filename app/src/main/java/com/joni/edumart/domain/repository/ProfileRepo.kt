@@ -6,7 +6,7 @@ import com.joni.edumart.data.api.dto.userdetails.UserData
 
 interface ProfileRepo {
 
-    suspend fun getEnrolledCourses() : List<EnrolledData>
+    suspend fun getEnrolledCourses(token : String) : List<EnrolledData>
 
-    suspend fun getUserDetails() : UserData
+    suspend fun getUserDetails(token : String) : UserData
 }

@@ -54,6 +54,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.joni.edumart.data.api.dto.userdetails.UserData
 import com.joni.edumart.presentation.ProfileViewModel
+import com.joni.edumart.presentation.TokenViewModel
 import com.joni.edumart.presentation.UserDataState
 
 
@@ -117,11 +118,13 @@ fun Profile(data : UserData) {
 }
 
 @Composable
-fun ProfileScreen(vm : ProfileViewModel = hiltViewModel(), navController: NavController) {
+fun ProfileScreen(vm : ProfileViewModel = hiltViewModel(),
+                  navController: NavController,
+                  tokenViewModel: TokenViewModel = hiltViewModel()) {
     val state by vm.userDetailsState.collectAsState()
-
+   val token = tokenViewModel.token.collectAsState().value
     LaunchedEffect(Unit) {
-        vm.fetchUserDetails()
+        vm.fetchUserDetails(token!!)
     }
     Log.d(TAG, "ProfileScreen: $state")
     if(state is UserDataState.Loading){
