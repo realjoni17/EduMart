@@ -25,9 +25,9 @@ EduMart is an Android application developed as part of a college project. The pr
 |:-------------------------------------:|:--------------------------------:|:---------------------------------:|
 | <img src = "/assets/HomeScreen.jpeg"> | <img src = "/assets/login.jpeg"> | <img src = "/assets/signup.jpeg"> |
 
-|         CourseDetailScreen         |           Payment Screen           |           MyCourses Screen           |             
-|:----------------------------------:|:----------------------------------:|:------------------------------------:|
-| <img src = "/assets/Detail.jpefg"> | <img src = "/assets/Payment.jpeg"> | <img src = "/assets/MyCourses.jpeg"> |
+|        CourseDetailScreen         |           Payment Screen           |           MyCourses Screen           |             
+|:---------------------------------:|:----------------------------------:|:------------------------------------:|
+| <img src = "/assets/Detail.jpeg"> | <img src = "/assets/Payment.jpeg"> | <img src = "/assets/MyCourses.jpeg"> |
 
 |           AiChatBotScreen            |           Splash Screen           |           VideoPlayerScreen            |
 |:------------------------------------:|:---------------------------------:|:--------------------------------------:|
