@@ -44,7 +44,189 @@ import com.joni.edumart.data.api.dto.coursedetail.CourseDetailData
 import com.joni.edumart.data.api.dto.coursedetail.SubSection
 import com.joni.edumart.presentation.PaymentViewModel
 import com.joni.edumart.presentation.TokenViewModel
+import com.joni.edumart.presentation.components.ShimmerEffect
 
+@Composable
+fun CourseDetailShimmer() {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        item {
+            // Thumbnail shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clip(RoundedCornerShape(8.dp)),
+                height = 200
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Course title shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(32.dp),
+                height = 32
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Course description shimmer
+            repeat(3) {
+                ShimmerEffect(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp),
+                    height = 20
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Instructor info shimmer
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                ShimmerEffect(
+                    modifier = Modifier
+                        .size(56.dp)
+                        .clip(CircleShape),
+                    height = 56
+                )
+
+                Spacer(modifier = Modifier.width(16.dp))
+
+                Column {
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth(0.6f)
+                            .height(24.dp),
+                        height = 24
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth(0.4f)
+                            .height(20.dp),
+                        height = 20
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Course meta info shimmer
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Column {
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth(0.3f)
+                            .height(20.dp),
+                        height = 20
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth(0.4f)
+                            .height(24.dp),
+                        height = 24
+                    )
+                }
+
+                Column {
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth(0.3f)
+                            .height(20.dp),
+                        height = 20
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth(0.4f)
+                            .height(24.dp),
+                        height = 24
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Tags shimmer
+            Row {
+                repeat(3) {
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .width(80.dp)
+                            .height(32.dp)
+                            .padding(end = 8.dp),
+                        height = 32
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // What you'll learn title shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(28.dp),
+                height = 28
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // What you'll learn content shimmer
+            repeat(4) {
+                ShimmerEffect(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(20.dp),
+                    height = 20
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+        }
+
+        // Course sections shimmer
+        repeat(3) {
+            item {
+                // Section title shimmer
+                ShimmerEffect(
+                    modifier = Modifier
+                        .fillMaxWidth(0.7f)
+                        .height(28.dp),
+                    height = 28
+                )
+
+                Spacer(modifier = Modifier.height(8.dp))
+
+                // Subsection shimmer
+                repeat(2) {
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp)
+                            .padding(start = 16.dp),
+                        height = 48
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+        }
+    }
+}
 
 @SuppressLint("StateFlowValueCalledInComposition", "ContextCastToActivity")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -72,8 +254,6 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(),
     LaunchedEffect(courseId) {
         vm.loadCourseDetails(courseId)
     }
-
-
 
     Scaffold(
         topBar = {
@@ -181,8 +361,8 @@ fun CourseDetailScreen(vm : CourseViewModel = hiltViewModel(),
             }
 
             is CourseDetailState.Error -> Text("Error")
-            CourseDetailState.Idle -> CircularProgressIndicator()
-            CourseDetailState.Loading -> CircularProgressIndicator()
+            CourseDetailState.Idle -> CourseDetailShimmer()
+            CourseDetailState.Loading -> CourseDetailShimmer()
         }
     }
 }

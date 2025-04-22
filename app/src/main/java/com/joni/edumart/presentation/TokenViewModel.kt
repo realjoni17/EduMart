@@ -1,38 +1,69 @@
 package com.joni.edumart.presentation
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joni.edumart.domain.repository.TokenRepo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-
 @HiltViewModel
 class TokenViewModel @Inject constructor(private val repo: TokenRepo) : ViewModel() {
+    private val _token = MutableStateFlow<String?>(null)
+    val token: StateFlow<String?> = _token.asStateFlow()
 
-    // Fetch token from repo and hold it as a StateFlow
-    val token: StateFlow<String?> = repo.getToken()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    private val _isUserLoggedIn = MutableStateFlow(false)
+    val isUserLoggedIn: StateFlow<Boolean> = _isUserLoggedIn.asStateFlow()
 
-    val isUserLoggedIn = token.map { !it.isNullOrEmpty() }
-        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+    init {
+        loadToken()
+    }
+
+    private fun loadToken() {
+        viewModelScope.launch {
+            try {
+                repo.getToken().collectLatest { storedToken ->
+                    _token.value = storedToken
+                    _isUserLoggedIn.value = storedToken != null
+                    Log.d(TAG, "Token loaded: ${storedToken?.take(10)}...")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Error loading token: ${e.message}")
+                _token.value = null
+                _isUserLoggedIn.value = false
+            }
+        }
+    }
 
     fun saveToken(token: String) {
         viewModelScope.launch {
-            repo.saveToken(token)
+            try {
+                repo.saveToken(token)
+                _token.value = token
+                _isUserLoggedIn.value = true
+                Log.d(TAG, "Token saved: ${token.take(10)}...")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error saving token: ${e.message}")
+            }
         }
     }
-    fun clearToken() {
+
+    fun logout() {
         viewModelScope.launch {
-            repo.saveToken("") // Or null if supported
-            //token.value = null
+            try {
+                repo.clearToken()
+                _token.value = null
+                _isUserLoggedIn.value = false
+                Log.d(TAG, "User logged out")
+            } catch (e: Exception) {
+                Log.e(TAG, "Error during logout: ${e.message}")
+            }
         }
     }
 }

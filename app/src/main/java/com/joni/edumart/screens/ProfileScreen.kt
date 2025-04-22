@@ -56,6 +56,7 @@ import com.joni.edumart.data.api.dto.userdetails.UserData
 import com.joni.edumart.presentation.ProfileViewModel
 import com.joni.edumart.presentation.TokenViewModel
 import com.joni.edumart.presentation.UserDataState
+import com.joni.edumart.presentation.components.ShimmerEffect
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -114,6 +115,66 @@ fun Profile(data : UserData) {
 }
 
 @Composable
+fun ProfileShimmer() {
+    Scaffold() { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            // Profile image shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape),
+                height = 100
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Name shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(30.dp),
+                height = 30
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Email shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(20.dp),
+                height = 20
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Enrolled courses shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(25.dp),
+                height = 25
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Course count shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.5f)
+                    .height(20.dp),
+                height = 20
+            )
+        }
+    }
+}
+
+@Composable
 fun ProfileScreen(vm : ProfileViewModel = hiltViewModel(),
                   navController: NavController,
                   tokenViewModel: TokenViewModel = hiltViewModel()) {
@@ -125,15 +186,19 @@ fun ProfileScreen(vm : ProfileViewModel = hiltViewModel(),
 
     }
     Log.d(TAG, "ProfileScreen: $state")
-    if(state is UserDataState.Loading){
-        CircularProgressIndicator(modifier = Modifier.size(50.dp))
-    }
-    if (state is UserDataState.Error){
-        val error = (state as UserDataState.Error).message
-        Text("Error While Fetching User = $error")
-    }
-    if (state is UserDataState.Success){
-        val data = (state as UserDataState.Success).data
-        Profile(data = data)
+    
+    when (state) {
+        is UserDataState.Loading -> {
+            ProfileShimmer()
+        }
+        is UserDataState.Error -> {
+            val error = (state as UserDataState.Error).message
+            Text("Error While Fetching User = $error")
+        }
+        is UserDataState.Success -> {
+            val data = (state as UserDataState.Success).data
+            Profile(data = data)
+        }
+        else -> {}
     }
 }

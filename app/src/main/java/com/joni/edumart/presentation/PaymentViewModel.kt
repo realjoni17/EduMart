@@ -38,14 +38,13 @@ class PaymentViewModel @Inject constructor(
         token: String,
         razorpayPaymentId: String,
         razorpayOrderId: String,
-        razorpaySignature: String,
         courseIds: List<String>
     ) {
         viewModelScope.launch {
             _paymentState.value = PaymentState.Loading
             try {
                 val response = paymentRepo.VerifyPayment(
-                    token, razorpayPaymentId, razorpayOrderId, razorpaySignature, courseIds
+                    token, razorpayPaymentId, razorpayOrderId, courseIds
                 )
                 _paymentState.value = PaymentState.Success(response)
             } catch (e: Exception) {
@@ -65,10 +64,10 @@ class PaymentViewModel @Inject constructor(
             }
         }
     }
+
     fun setErrorState(message: String) {
         _paymentState.value = PaymentState.Error(message)
     }
-
 
     sealed class PaymentState {
         object Idle : PaymentState()

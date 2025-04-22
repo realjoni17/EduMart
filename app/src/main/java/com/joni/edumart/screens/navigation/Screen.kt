@@ -7,6 +7,10 @@ package com.joni.edumart.screens.navigation
       data class Payment(val courseId : String) : Screen("payment/$courseId")
       data class VideoPlayer(val videoUrl : String, val videoText : String) : Screen("player")
       object Profile : Screen("profile")
+     // object Settings : Screen("settings")
+    //  object Help : Screen("help")
       object Settings : Screen("settings")
       object Help : Screen("help")
+      object About : Screen("about")
+      object ChangePassword : Screen("change_password")
   }

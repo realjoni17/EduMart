@@ -39,18 +39,12 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.joni.edumart.common.Constant
-import com.joni.edumart.screens.ChatbotUiScreen
-import com.joni.edumart.screens.CourseDetailScreen
-import com.joni.edumart.screens.CourseListScreen
-
-import com.joni.edumart.screens.EnrolledCoursesScreen
-import com.joni.edumart.screens.LoginScreen
-import com.joni.edumart.screens.PaymentScreen
-import com.joni.edumart.screens.ProfileScreen
-import com.joni.edumart.screens.SplashScreen
-import com.joni.edumart.screens.VideoPlayerScreen
+import com.joni.edumart.screens.*
+import com.joni.edumart.screens.navigation.Screen.Help
+import com.joni.edumart.screens.navigation.Screen.Settings
 import kotlinx.coroutines.launch
-
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.joni.edumart.presentation.TokenViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,6 +53,7 @@ fun AppNavigation() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val coroutineScope = rememberCoroutineScope()
+    val tokenViewModel: TokenViewModel = hiltViewModel()
 
     val bottomNavItems = listOf(
         BottomNavItem("courses", "Courses", Icons.Default.Home),
@@ -68,11 +63,20 @@ fun AppNavigation() {
     )
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-
     val currentRoute = navBackStackEntry?.destination?.route
 
-
-   val hideUIOnScreens = listOf("player/{videoUrl}/{videoText}", "payment/{courseId}", "course/{id}", "splash", "login", "signup")
+    val hideUIOnScreens = listOf(
+        "player/{videoUrl}/{videoText}",
+        "payment/{courseId}",
+        "course/{id}",
+        "splash",
+        "login",
+        "signup",
+        "settings",
+        "help",
+        "about",
+        "change_password"
+    )
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -88,56 +92,62 @@ fun AppNavigation() {
                         modifier = Modifier.padding(16.dp)
                     )
                     DrawerItemView(DrawerItem("settings", "Settings", Icons.Default.Settings)) {
-                        navController.navigate(Screen.Settings.route)
-                        coroutineScope.launch { drawerState.close() } // Close drawer after navigation
+                        navController.navigate(Settings.route)
+                        coroutineScope.launch { drawerState.close() }
                     }
                     DrawerItemView(DrawerItem("help", "Help", Icons.Default.Info)) {
-                        navController.navigate(Screen.Help.route)
+                        navController.navigate(Help.route)
                         coroutineScope.launch { drawerState.close() }
                     }
                     DrawerItemView(DrawerItem("logout", "Logout", Icons.Default.ExitToApp)) {
+                        tokenViewModel.logout()
+                        navController.navigate("login") {
+                            popUpTo(0) { inclusive = true }
+                        }
                         coroutineScope.launch { drawerState.close() }
                     }
                 }
         }
-
     ) {
         Scaffold(
             bottomBar = {
                 if (currentRoute !in hideUIOnScreens)
-                BottomNavigationBar(
-                    navController = navController,
-                    items = bottomNavItems
-                )
+                    BottomNavigationBar(
+                        navController = navController,
+                        items = bottomNavItems
+                    )
             },
             topBar = {
                 if (currentRoute !in hideUIOnScreens)
-                TopAppBar(
-                    title = {Text("EduMart")},
-                    navigationIcon = {
-                        IconButton(onClick = {coroutineScope.launch { drawerState.open() }}) {
-                            Icon(Icons.Default.Menu, "")
+                    TopAppBar(
+                        title = { Text("EduMart") },
+                        navigationIcon = {
+                            IconButton(onClick = { coroutineScope.launch { drawerState.open() } }) {
+                                Icon(Icons.Default.Menu, "")
+                            }
                         }
-                    }
-
-                )
-            },
-            ) {  padding ->
-            NavHost(modifier = Modifier
-                .padding(padding)
-                .navigationBarsPadding()
-                .statusBarsPadding(),
+                    )
+            }
+        ) { padding ->
+            NavHost(
+                modifier = Modifier
+                    .padding(padding)
+                    .navigationBarsPadding()
+                    .statusBarsPadding(),
                 navController = navController,
-                startDestination = "splash") {
-
+                startDestination = "splash"
+            ) {
                 composable("courses") { CourseListScreen(navController = navController) }
                 composable("course/{id}") { backStackEntry ->
-                    backStackEntry.arguments?.getString("id")?.let { CourseDetailScreen(courseId = it, navController = navController) }
+                    backStackEntry.arguments?.getString("id")?.let { 
+                        CourseDetailScreen(courseId = it, navController = navController) 
+                    }
                 }
                 composable("payment/{courseId}") { backStackEntry ->
                     backStackEntry.arguments?.getString("courseId")?.let {
                         val list = listOf(it)
-                        PaymentScreen(courseIds = list, token = Constant.TOKEN) }
+                        PaymentScreen(courseIds = list, token = Constant.TOKEN)
+                    }
                 }
                 composable(
                     "player/{videoUrl}/{videoText}",
@@ -148,7 +158,6 @@ fun AppNavigation() {
                 ) { backStackEntry ->
                     val videoUrl = backStackEntry.arguments?.getString("videoUrl") ?: ""
                     val videoText = backStackEntry.arguments?.getString("videoText") ?: ""
-
                     VideoPlayerScreen(
                         modifier = Modifier,
                         videoUrl = videoUrl,
@@ -170,11 +179,22 @@ fun AppNavigation() {
                 composable("splash") {
                     SplashScreen(navController = navController)
                 }
-            composable("signup") {
-                SignupScreen(navController = navController)
+                composable("signup") {
+                    SignupScreen(navController = navController)
+                }
+                composable(Settings.route) {
+                    SettingsScreen(navController = navController)
+                }
+                composable(Help.route) {
+                    HelpScreen(navController = navController)
+                }/*
+                composable("about") {
+                    AboutScreen(navController = navController)
+                }
+                composable("change_password") {
+                    ChangePasswordScreen(navController = navController)
+                }*/
             }
-            }}
         }
-      }
-
-
+    }
+}

@@ -4,6 +4,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
+
 import com.joni.edumart.domain.repository.TOKEN
 import com.joni.edumart.domain.repository.TokenRepo
 import kotlinx.coroutines.flow.Flow
@@ -23,4 +24,9 @@ class TokenRepoImpl @Inject constructor(private val dataStore : DataStore<Prefer
         }
     }
 
+    override suspend fun clearToken() {
+        dataStore.edit {
+            it.remove(TOKEN)
+        }
+    }
 }

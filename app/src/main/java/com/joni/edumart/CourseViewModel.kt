@@ -22,9 +22,11 @@ class CourseViewModel @Inject constructor(private val courseRepo: CourseRepo) : 
     private val _courseDetail = MutableStateFlow<CourseDetailState>(CourseDetailState.Idle)
     val courseDetail: StateFlow<CourseDetailState> = _courseDetail
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     private val _errorMesssage = MutableStateFlow<String?>(null)
     val errorMessage: StateFlow<String?> = _errorMesssage.asStateFlow()
-
 
     init {
         loadCourses()
@@ -32,6 +34,7 @@ class CourseViewModel @Inject constructor(private val courseRepo: CourseRepo) : 
 
     private fun loadCourses() {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
                 val courseList = courseRepo.getCourses()
                 _courses.value = courseList
@@ -39,13 +42,16 @@ class CourseViewModel @Inject constructor(private val courseRepo: CourseRepo) : 
             } catch (e: Exception) {
                 _errorMesssage.value = e.message
                 Log.d(TAG, "load:${e.message}")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
     fun loadCourseDetails(courseId: String) {
         viewModelScope.launch {
-            _courseDetail.value = CourseDetailState.Loading  // Set loading state before making request
+            _courseDetail.value = CourseDetailState.Loading
+            _isLoading.value = true
 
             try {
                 val courseDetail = courseRepo.getCourseDetails(courseId)
@@ -54,15 +60,16 @@ class CourseViewModel @Inject constructor(private val courseRepo: CourseRepo) : 
             } catch (e: Exception) {
                 _courseDetail.value = CourseDetailState.Error(e.message)
                 Log.e(TAG, "Error loading course: ${e.message}", e)
+            } finally {
+                _isLoading.value = false
             }
         }
     }
-
 }
 
 sealed class CourseDetailState {
     object Idle : CourseDetailState()
-    object Loading :  CourseDetailState()
-    data class Success(val detail: CourseDetailData) :  CourseDetailState()
-    data class Error(val message: String?) :  CourseDetailState()
+    object Loading : CourseDetailState()
+    data class Success(val detail: CourseDetailData) : CourseDetailState()
+    data class Error(val message: String?) : CourseDetailState()
 }

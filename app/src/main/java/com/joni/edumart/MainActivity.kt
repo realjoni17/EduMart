@@ -31,7 +31,7 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                  AppNavigation()
+                    AppNavigation()
                 }
             }
         }
@@ -48,7 +48,6 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
                 token = Constant.TOKEN,
                 razorpayOrderId = orderId,
                 razorpayPaymentId = paymentId,
-                razorpaySignature = "", // Get from Razorpay callback if available
                 courseIds = listOf("67c8793c30282fcf69462f8f")
             )
 
@@ -65,5 +64,4 @@ class MainActivity : ComponentActivity(), PaymentResultListener {
     override fun onPaymentError(code: Int, response: String?) {
         viewModel.setErrorState("Payment Failed: $response")
     }
-
 }

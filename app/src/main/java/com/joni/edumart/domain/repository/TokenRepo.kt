@@ -11,5 +11,6 @@ interface TokenRepo {
 
     suspend fun saveToken(token : String)
 
+    suspend fun clearToken()
 
 }

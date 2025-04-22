@@ -46,24 +46,76 @@ import coil.compose.AsyncImage
 import com.joni.edumart.CourseViewModel
 import com.joni.edumart.R
 import com.joni.edumart.domain.models.Course
+import com.joni.edumart.presentation.components.ShimmerEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 
-
-
-@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun CourseListScreen(vm : CourseViewModel = hiltViewModel(), navController: NavController) {
+fun CourseCardShimmer() {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(min = 300.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
+        ) {
+            // Thumbnail shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(16f / 9f)
+                    .clip(MaterialTheme.shapes.medium),
+                height = 200
+            )
 
-    val courseList = vm.courses.collectAsState()
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Course title shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(24.dp),
+                height = 24
+            )
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            // Instructor name shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.6f)
+                    .height(20.dp),
+                height = 20
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Price shimmer
+            ShimmerEffect(
+                modifier = Modifier
+                    .fillMaxWidth(0.3f)
+                    .height(24.dp),
+                height = 24
+            )
+        }
+    }
+}
+
+@Composable
+fun CourseListShimmer() {
     Column {
-
-        Text(
-            "   Hi User! How are you today?",
-            style = MaterialTheme.typography.titleLarge,
-            fontWeight = FontWeight.Bold,
-            // modifier = Modifier.padding(16.dp)
+        // Greeting shimmer
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .height(32.dp)
+                .padding(16.dp),
+            height = 32
         )
-
 
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 300.dp),
@@ -71,10 +123,40 @@ fun CourseListScreen(vm : CourseViewModel = hiltViewModel(), navController: NavC
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            items(courseList.value) { course ->
-                CourseCard(course = course, onClick = {
-                    navController.navigate("course/${course._id}")
-                })
+            items(6) { // Show 6 shimmer cards
+                CourseCardShimmer()
+            }
+        }
+    }
+}
+
+@SuppressLint("StateFlowValueCalledInComposition")
+@Composable
+fun CourseListScreen(vm : CourseViewModel = hiltViewModel(), navController: NavController) {
+    val courseList = vm.courses.collectAsState()
+    val isLoading = vm.isLoading.collectAsState()
+
+    if (isLoading.value) {
+        CourseListShimmer()
+    } else {
+        Column {
+            Text(
+                "   Hi User! How are you today?",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+            )
+
+            LazyVerticalGrid(
+                columns = GridCells.Adaptive(minSize = 300.dp),
+                contentPadding = PaddingValues(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                items(courseList.value) { course ->
+                    CourseCard(course = course, onClick = {
+                        navController.navigate("course/${course._id}")
+                    })
+                }
             }
         }
     }

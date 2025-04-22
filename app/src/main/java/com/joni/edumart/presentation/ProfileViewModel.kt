@@ -22,30 +22,39 @@ class ProfileViewModel @Inject constructor(
     val enrolledCoursesState: StateFlow<EnrolledCoursesState> = _enrolledCoursesState.asStateFlow()
 
     private val _userDetailsState = MutableStateFlow<UserDataState>(UserDataState.Idle)
-    val userDetailsState : StateFlow<UserDataState> = _userDetailsState.asStateFlow()
+    val userDetailsState: StateFlow<UserDataState> = _userDetailsState.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     fun fetchEnrolledCourses(token: String) {
         viewModelScope.launch {
             _enrolledCoursesState.value = EnrolledCoursesState.Loading
+            _isLoading.value = true
             try {
                 val courses = profileRepo.getEnrolledCourses(token)
                 _enrolledCoursesState.value = EnrolledCoursesState.Success(courses)
             } catch (e: Exception) {
                 _enrolledCoursesState.value =
                     EnrolledCoursesState.Error(e.message ?: "Unknown error")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
 
-    fun fetchUserDetails(token : String){
+    fun fetchUserDetails(token: String) {
         viewModelScope.launch {
             _userDetailsState.value = UserDataState.Loading
+            _isLoading.value = true
             try {
                 val data = profileRepo.getUserDetails(token)
                 _userDetailsState.value = UserDataState.Success(data)
-            }catch (e : Exception){
+            } catch (e: Exception) {
                 _userDetailsState.value =
                     UserDataState.Error(e.message ?: "Unknown Error")
+            } finally {
+                _isLoading.value = false
             }
         }
     }
@@ -58,10 +67,10 @@ sealed class EnrolledCoursesState {
     data class Error(val message: String) : EnrolledCoursesState()
 }
 
-sealed class UserDataState{
+sealed class UserDataState {
     object Idle : UserDataState()
     object Loading : UserDataState()
-    data class  Success(val data : UserData) : UserDataState()
+    data class Success(val data: UserData) : UserDataState()
     data class Error(val message: String) : UserDataState()
 }
 

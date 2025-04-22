@@ -16,6 +16,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -40,8 +41,7 @@ import com.joni.edumart.domain.repository.ProfileRepo
 import com.joni.edumart.presentation.EnrolledCoursesState
 import com.joni.edumart.presentation.ProfileViewModel
 import com.joni.edumart.presentation.TokenViewModel
-
-
+import com.joni.edumart.presentation.components.ShimmerEffect
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -110,7 +110,6 @@ fun EnrolledCourses(data: EnrolledData, navController: NavController) {
     }
 }
 
-
 @Composable
 private fun CourseSectionItem(section: com.joni.edumart.data.api.dto.enrolledcoursedto.CourseContent, onClick : (SubSection) -> Unit = {}) {
     Card(
@@ -141,6 +140,147 @@ private fun SectionTitle(text: String) {
     )
 }
 
+@Composable
+fun EnrolledCourseShimmer() {
+    Column {
+        // Title shimmer
+        ShimmerEffect(
+            modifier = Modifier
+                .fillMaxWidth(0.4f)
+                .height(24.dp)
+                .padding(16.dp),
+            height = 24
+        )
+
+        // Course cards shimmer
+        repeat(3) {
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                shape = RoundedCornerShape(12.dp),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            ) {
+                Column(modifier = Modifier.padding(16.dp)) {
+                    // Course title row shimmer
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ShimmerEffect(
+                            modifier = Modifier
+                                .fillMaxWidth(0.7f)
+                                .height(24.dp),
+                            height = 24
+                        )
+                        ShimmerEffect(
+                            modifier = Modifier
+                                .size(24.dp)
+                                .clip(CircleShape),
+                            height = 24
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Thumbnail shimmer
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(150.dp)
+                            .clip(RoundedCornerShape(8.dp)),
+                        height = 150
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Progress bar shimmer
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(8.dp),
+                        height = 8
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Course content title shimmer
+                    ShimmerEffect(
+                        modifier = Modifier
+                            .fillMaxWidth(0.4f)
+                            .height(24.dp),
+                        height = 24
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Course sections shimmer
+                    repeat(2) {
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 4.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(16.dp)) {
+                                // Section title shimmer
+                                ShimmerEffect(
+                                    modifier = Modifier
+                                        .fillMaxWidth(0.6f)
+                                        .height(24.dp),
+                                    height = 24
+                                )
+
+                                Spacer(modifier = Modifier.height(8.dp))
+
+                                // Subsection items shimmer
+                                repeat(2) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(vertical = 8.dp),
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        ShimmerEffect(
+                                            modifier = Modifier
+                                                .size(24.dp)
+                                                .clip(CircleShape),
+                                            height = 24
+                                        )
+                                        Spacer(modifier = Modifier.width(16.dp))
+                                        Column {
+                                            ShimmerEffect(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(0.8f)
+                                                    .height(20.dp),
+                                                height = 20
+                                            )
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            ShimmerEffect(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(0.4f)
+                                                    .height(16.dp),
+                                                height = 16
+                                            )
+                                            Spacer(modifier = Modifier.height(4.dp))
+                                            ShimmerEffect(
+                                                modifier = Modifier
+                                                    .fillMaxWidth(0.6f)
+                                                    .height(16.dp),
+                                                height = 16
+                                            )
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Divider()
+        }
+    }
+}
 
 @Composable
 fun EnrolledCoursesScreen(vm: ProfileViewModel = hiltViewModel(),
@@ -150,20 +290,15 @@ fun EnrolledCoursesScreen(vm: ProfileViewModel = hiltViewModel(),
     val state by vm.enrolledCoursesState.collectAsState()
     val token = tokenViewModel.token.collectAsState().value
 
-
-
-
     LaunchedEffect(token) {
         if (token != null)
-        vm.fetchEnrolledCourses(token)
+            vm.fetchEnrolledCourses(token)
     }
 
     Box(modifier = Modifier.fillMaxSize()) {
         when (state) {
             is EnrolledCoursesState.Loading -> {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                EnrolledCourseShimmer()
             }
             is EnrolledCoursesState.Success -> {
                 val courses = (state as EnrolledCoursesState.Success).courses
@@ -198,7 +333,7 @@ fun EnrolledCoursesScreen(vm: ProfileViewModel = hiltViewModel(),
                     }
                 }
             }
-            EnrolledCoursesState.Idle -> Unit // Handle initial state if needed
+            EnrolledCoursesState.Idle -> EnrolledCourseShimmer()
         }
     }
 }

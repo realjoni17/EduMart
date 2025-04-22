@@ -10,7 +10,6 @@ interface PaymentRepo {
     suspend fun VerifyPayment(token: String,
                               razorpayPaymentId: String,
                               razorpayOrderId: String,
-                              razorpaySignature: String,
                               courseIds: List<String>)  : Any
 
 
